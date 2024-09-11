@@ -1,14 +1,16 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api/tauri';
   import { open, save } from '@tauri-apps/api/dialog';
+  import FileIcon from '../assets/file.svg';
+  import Button from '$lib/components/ui/button/button.svelte';
 
   async function compress() {
-    const file = await open({
-      multiple: false,
+    const files = await open({
+      multiple: true,
       title: 'Выберите файл',
     });
 
-    if (!file) {
+    if (!files) {
       return;
     }
 
@@ -23,7 +25,7 @@
     });
 
     const result = await invoke('compress', {
-      targetPath: file,
+      files: files,
       outputName: to,
     });
 
@@ -57,36 +59,50 @@
 
     console.log(result);
   }
+
+  async function list() {
+    const file = await open({
+      multiple: false,
+      filters: [
+        {
+          extensions: ['zip'],
+          name: 'Архив',
+        },
+      ],
+    });
+
+    if (!file) return;
+
+    const result: Array<string> = await invoke('contents', { filepath: file });
+    contents = result;
+  }
+
+  let contents: Array<string> = [];
 </script>
 
-<div class="container">
-  <button class="button" on:click={compress}>Сжать</button>
-  <button class="button" on:click={decompress}>Разархивировать</button>
+<div class="size-full">
+  <div class="flex items-center gap-x-1 border-b p-1">
+    <Button variant="ghost" size="sm" on:click={compress}>Сжать</Button>
+    <Button variant="ghost" size="sm" on:click={decompress}
+      >Разархивировать</Button
+    >
+    <Button variant="ghost" size="sm" on:click={list}>Открыть архив</Button>
+  </div>
+
+  {#if contents.length}
+    <div class="space-y-2 p-1">
+      {#each contents as file}
+        <div class="flex items-center">
+          <img
+            class="pointer-events-none"
+            src={FileIcon}
+            width={20}
+            height={20}
+            alt="File"
+          />
+          {file}
+        </div>
+      {/each}
+    </div>
+  {/if}
 </div>
-
-<style>
-  .container {
-    height: 100vh;
-    width: 100vw;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.3rem;
-  }
-  .button {
-    width: 50%;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.4rem;
-    border: none;
-    background: black;
-    font-weight: 500;
-    color: white;
-    cursor: pointer;
-
-    &:hover {
-      background: rgb(46, 46, 46);
-    }
-  }
-</style>

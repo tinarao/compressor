@@ -28,8 +28,8 @@
     "windows": [
       {
         "title": "compressor",
-        "width": 400,
-        "height": 200,
+        "width": 700,
+        "height": 500,
         "resizable": false
       }
     ],

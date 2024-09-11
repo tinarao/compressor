@@ -29,12 +29,7 @@ pub fn unzip(archive_path: String, target_dir: String) -> Result<(), ZipError> {
     Ok(())
 }
 
-pub fn compress(target_path: String, output_name: String) -> Result<(), ZipError> {
-    let exists = Path::new(&target_path);
-    if !exists.exists() {
-        panic!("you fool")
-    }
-
+pub fn compress(files: Vec<String>, output_name: String) -> Result<(), ZipError> {
     let op = output_name.as_str();
 
     let zip_file_path = Path::new(op);
@@ -43,18 +38,42 @@ pub fn compress(target_path: String, output_name: String) -> Result<(), ZipError
     let mut zip = ZipWriter::new(zip_file);
     let opts = FileOptions::default().compression_method(CompressionMethod::DEFLATE);
 
-    let file_to_compress = PathBuf::from(target_path);
-    let file = File::open(&file_to_compress)?;
-    let file_name = file_to_compress.file_name().unwrap().to_str().unwrap();
+    let mut files_to_compress: Vec<PathBuf> = Vec::new();
+    for path in files {
+        files_to_compress.push(PathBuf::from(path));
+    }
 
-    let _ = zip.start_file(file_name, opts);
-    let mut buf = Vec::new();
+    for file_path in files_to_compress {
+        let file_to_compress = PathBuf::from(file_path);
+        let file = File::open(&file_to_compress)?;
+        let file_name = file_to_compress.file_name().unwrap().to_str().unwrap();
 
-    let mut reader = file.take(u64::MAX);
-    io::copy(&mut reader, &mut buf)?;
+        let _ = zip.start_file(file_name, opts);
+        let mut buf = Vec::new();
 
-    zip.write_all(&buf)?;
+        let mut reader = file.take(u64::MAX);
+        io::copy(&mut reader, &mut buf)?;
+
+        zip.write_all(&buf)?;
+    }
+
     zip.finish()?;
 
     Ok(())
+}
+
+pub fn get_contents(filepath: String) -> Result<Vec<String>, ZipError> {
+    let mut filenames = Vec::new();
+    let path = Path::new(&filepath);
+    let zip_file = File::open(path)?;
+
+    let mut archive = ZipArchive::new(zip_file)?;
+
+    for i in 0..archive.len() {
+        let file = archive.by_index(i)?;
+        let filename = String::from(file.name());
+        filenames.push(filename);
+    }
+
+    Ok(filenames)
 }
