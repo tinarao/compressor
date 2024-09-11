@@ -1,5 +1,7 @@
-# Compressor
+# Tauri + SvelteKit + TypeScript
 
-маленькая cli для архивирования файлов. пока умеет только архивировать / разархивировать .zip файлы.
+This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
 
-maybe add some tauri? 🤔
+## Recommended IDE Setup
+
+[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
