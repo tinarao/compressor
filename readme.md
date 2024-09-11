@@ -1,7 +1,11 @@
-# Tauri + SvelteKit + TypeScript
+# Compressor
 
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
+### ⚡⚡ МОЛНИЕНОСНО БЫСТРАЯ ⚡⚡ утилитка для работы с зип-файлами o/
 
-## Recommended IDE Setup
+![plot](/compressor.png)
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+Написано на [Rust](https://github.com/rust-lang/rust), фронтенд via [Tauri](https://github.com/tauri-apps/tauri) & [Svelte](https://github.com/sveltejs/svelte).
+
+## зы
+
+Спасибо большое вот этому [типу](https://github.com/Pr0methean) за [либу](https://github.com/zip-rs/zip2).
